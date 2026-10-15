@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ghost System · Webmail</title>
+<style>
+:root[data-theme=dark]{--bg:#09090F;--hdr:#0C0B14;--card:#15151F;--inp:#1D1D2A;--bd:#2B2B3D;--tx:#F5F5FA;--tx2:#9292A8;--btn:#fff;--btnx:#000;--sh:none}
+:root[data-theme=white]{--bg:#F6F6F8;--hdr:#fff;--card:#fff;--inp:#F1F1F4;--bd:#E1E1E8;--tx:#0B0B10;--tx2:#6B6B7B;--btn:#0B0B10;--btnx:#fff;--sh:0 8px 30px rgba(0,0,0,.06)}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;transition:background .25s,color .25s}
+button{font:inherit;color:inherit;cursor:pointer}[hidden]{display:none!important}
+header{height:62px;flex:none;background:var(--hdr);border-bottom:1px solid var(--bd)}
+.wrap{max-width:1200px;height:100%;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}.brand svg{width:28px;height:28px}
+.brand b{display:block;line-height:1.2}.brand small{color:var(--tx2);font-size:12px}
+.ico,.ghost{background:transparent;border:1px solid var(--bd);border-radius:10px;padding:7px 12px;transition:background .2s}
+.ico:hover,.ghost:hover{background:var(--inp)}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.card{width:100%;max-width:440px;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:36px;box-shadow:var(--sh);animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--tx2)}
+h1{font-size:26px;margin:8px 0 10px}.card p{color:var(--tx2);margin:0 0 24px;font-size:14px}
+.field{position:relative;margin-bottom:14px}
+.field svg{position:absolute;left:14px;top:50%;translate:0 -50%;width:18px;height:18px;color:var(--tx2)}
+input[type=email],input[type=password],input[type=text],input[type=search]{width:100%;height:46px;background:var(--inp);border:1px solid var(--bd);border-radius:12px;color:var(--tx);padding:0 44px;font:inherit;outline:none}
+input:focus{border-color:var(--tx2)}input::placeholder{color:var(--tx2)}
+.eye{position:absolute;right:6px;top:50%;translate:0 -50%;background:none;border:0;padding:8px;color:var(--tx2)}
+.chk{display:flex;gap:8px;align-items:center;color:var(--tx2);font-size:14px;margin:4px 0 18px}
+.primary{width:100%;height:46px;border:0;border-radius:12px;background:var(--btn);color:var(--btnx);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.primary:disabled{opacity:.6;cursor:not-allowed}
+.spin{width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:r .7s linear infinite}@keyframes r{to{rotate:1turn}}
+.err{color:#ff6b6b;font-size:13px;min-height:18px;margin:0 0 10px}
+.note{font-size:12px;color:var(--tx2);margin:16px 0 0;text-align:center}
+footer{text-align:center;color:var(--tx2);font-size:12px;padding:16px;flex:none}footer p{margin:2px 0}
+#inbox{flex:1;display:grid;grid-template-columns:380px 1fr;min-height:0;width:100%;max-width:1200px;margin:0 auto;border-left:1px solid var(--bd);border-right:1px solid var(--bd)}
+#inbox[hidden]{display:none}
+aside{display:flex;flex-direction:column;border-right:1px solid var(--bd);background:var(--card);min-height:0}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:14px;border-bottom:1px solid var(--bd)}
+.bar small{display:block;color:var(--tx2);font-size:11px}.bar b{font-size:13px;word-break:break-all}.acts{display:flex;gap:6px}
+#search{height:40px;padding:0 14px;border-radius:10px;margin:12px 14px}
+#search{width:calc(100% - 28px)}
+ul{list-style:none;margin:0;padding:0;overflow:auto;flex:1}
+li{padding:12px 14px;border-bottom:1px solid var(--bd);cursor:pointer;display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:start}
+li:hover,li.on{background:var(--inp)}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:7px}.unread .dot{background:var(--tx)}
+li div{min-width:0}li .f,li .s{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}li .s{color:var(--tx2);font-size:13px}.unread .f{font-weight:700}
+li time{font-size:11px;color:var(--tx2)}
+#state{padding:24px;text-align:center;color:var(--tx2);font-size:14px}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px solid var(--bd);color:var(--tx2);font-size:13px}
+#reader{padding:24px;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:14px}
+#back{display:none;align-self:flex-start}
+#reader h2{margin:0;font-size:20px}.meta{color:var(--tx2);font-size:13px;word-break:break-word}
+iframe{flex:1;min-height:320px;width:100%;border:1px solid var(--bd);border-radius:12px;background:#fff}
+pre{white-space:pre-wrap;word-break:break-word;font:inherit;background:var(--inp);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:0}
+.empty{margin:auto;color:var(--tx2)}
+@media(max-width:800px){#inbox{grid-template-columns:1fr;border:0}#reader{display:none}#inbox.reading aside{display:none}#inbox.reading #reader{display:flex}#back{display:block}.card{padding:28px 22px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 2.5a7 7 0 0 0-7 7v12l3-2 2 2 2-2 2 2 2-2 3 2v-12a7 7 0 0 0-7-7z"/><circle cx="9.5" cy="10" r="1" fill="currentColor"/><circle cx="14.5" cy="10" r="1" fill="currentColor"/></svg>
+    <div><b>Ghost System</b><small>Webmail · Caixa de entrada</small></div>
+  </div>
+  <button id="theme" class="ico" aria-label="Alternar tema"></button>
+</div></header>
+
+<main id="login">
+  <form class="card" id="form" novalidate>
+    <div class="eyebrow">ACESSO À CAIXA</div>
+    <h1>Entrar na sua caixa</h1>
+    <p>Use o e-mail e a senha da sua conta para acessar sua caixa de entrada e ler mensagens recebidas, incluindo códigos de verificação e confirmações.</p>
+    <div class="field"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      <input id="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="username" required maxlength="254"></div>
+    <div class="field"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <input id="pass" type="password" placeholder="Senha" autocomplete="current-password" required maxlength="200">
+      <button type="button" class="eye" id="eye" aria-label="Mostrar ou ocultar senha">👁</button></div>
+    <label class="chk"><input type="checkbox" id="remember"> Manter conectado neste dispositivo</label>
+    <div class="err" id="err" role="alert"></div>
+    <button class="primary" id="go" type="submit">Entrar</button>
+    <div class="note">Suas credenciais são utilizadas apenas para autenticação. A sessão deve ser protegida e as credenciais não devem ser registradas em logs.</div>
+  </form>
+</main>
+
+<section id="inbox" hidden>
+  <aside>
+    <div class="bar"><div><small>Conectado como</small><b id="who"></b></div>
+      <div class="acts"><button id="refresh" class="ico" title="Atualizar" aria-label="Atualizar">↻</button><button id="logout" class="ghost">Sair</button></div></div>
+    <input id="search" type="search" placeholder="Buscar por remetente ou assunto">
+    <ul id="msgs"></ul><div id="state"></div>
+    <div class="pager"><button id="prev" class="ico">←</button><span id="pg"></span><button id="next" class="ico">→</button></div>
+  </aside>
+  <article id="reader"><button id="back" class="ghost">← Voltar</button><div class="empty" id="ph">Selecione uma mensagem para ler.</div><div id="rd" hidden style="display:contents"></div></article>
+</section>
+
+<footer id="foot"><p>Ghost System · Webmail — acesso à caixa de e-mail da sua conta.</p><p>© 2026 Ghost System. Uso pessoal e intransferível.</p></footer>
+<script src="app.js"></script>
+</body>
+</html>
